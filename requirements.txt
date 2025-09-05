@@ -1,0 +1,11 @@
+langchain
+langchain-ollama
+langchain-core
+speech-recognition
+pyttsx3
+python-dotenv
+duckduckgo-search
+pillow
+pytesseract
+mss
+pytz

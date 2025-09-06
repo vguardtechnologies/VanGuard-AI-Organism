@@ -31,6 +31,9 @@ logging.basicConfig(level=logging.DEBUG)  # logging
 # org_id = os.getenv("OPENAI_ORG_ID") removed because it's not needed for ollama
 
 recognizer = sr.Recognizer()
+recognizer.energy_threshold = 300  # Adjust mic sensitivity 
+recognizer.dynamic_energy_threshold = True
+recognizer.pause_threshold = 1.5  # Wait longer before considering speech finished
 mic = sr.Microphone(device_index=MIC_INDEX)
 
 # Initialize LLM - using the exact model from the original repo
@@ -87,7 +90,7 @@ def write():
                 try:
                     if not conversation_mode:
                         logging.info("🎤 Listening for wake word...")
-                        audio = recognizer.listen(source, timeout=10)
+                        audio = recognizer.listen(source, timeout=15, phrase_time_limit=5)
                         transcript = recognizer.recognize_google(audio)
                         logging.info(f"🗣 Heard: {transcript}")
 
@@ -100,7 +103,7 @@ def write():
                             logging.debug("Wake word not detected, continuing...")
                     else:
                         logging.info("🎤 Listening for next command...")
-                        audio = recognizer.listen(source, timeout=10)
+                        audio = recognizer.listen(source, timeout=20, phrase_time_limit=8)
                         command = recognizer.recognize_google(audio)
                         logging.info(f"📥 Command: {command}")
 
